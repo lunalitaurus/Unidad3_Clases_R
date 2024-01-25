@@ -1,0 +1,171 @@
+---
+title: 'Unidad 3: Estructura de datos'
+author: "Rubén Muñoz"
+date: "2024-01-24"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+#### En esta lección aprederemos acerca de las **estructuras de datos**:)  
+<div style="text-align:center"> 
+![Cute Kitty using R](./imagenes/kitty_in_R.jpg){width=25%}
+</div>
+
+
+
+## **Vectores**
+Como mencionamos la unidad anterior, los vectores son objetos en R que pueden almacenar datos del mismo tipo. 
+Se definen principalmente por la función `c()` y pueden aceptar otros vectores dentro de sí. Por ejemplo:
+```{r, results='hide'}
+v1 <- c("Tavito", "Camila")
+v2 <- c(v1, "2", "Manzana")
+```
+```{r}
+print(v2)
+```
+### Propiedades básicas
+Sus propiedades pricnipales son *Clase* ya que solo acepta un solo tipo de datos y *Longitud* (o largo), es decir, el número de elementos que tiene.
+    
+### Creación y acceso a vectores
+Como se mencionó, se definen principalmente por la función `c()` y pueden aceptar otros vectores dentro de sí. Para acceder a cada uno de sus elementos se usa el símbolo `[]`
+```{r}
+# Por ejemplo para ver el primer elemento del vector v2
+ v2[1]
+# Para acceder al primer y tercer elemento
+ v2[c(1,3)]
+```
+### Operaciones con vectores
+Si tenemos un vector le podemos aplicar una operación a cada elemento y podemos guardar el resultado en otro vector. Por ejemplo:
+```{r}
+v3 <- c(1:10)
+(v3_result <- v3*2) #Dato: poner entre paréntesis un vector permite que se imprima en la consola siempre que se corra esa línea.
+```
+  
+## **Matrices** 
+En R una matriz es descrito como un vector multidimensional.
+
+### Propiedades básicas
+Tienen una *Clase*, un *largo* y un *alto*.
+Es decir, tienen datos en renglones y columnas, pero de un solo tipo.
+
+### Creación y acceso a matrices
+Para crear una matriz usamos la función `matrix()`.
+```{r} 
+# Crearemos una matriz usando nuestro vector 3
+## Primero colocamos nuestro vector dentro de la función
+### Después, con nrow = y ncol = podemos decidir cuántos renglones y columnas tener
+ matriz_1 <- matrix(v3, nrow = 5) #Matriz con 5 renglones y 2 columnas
+ matrix(v3, ncol = 5) #Matriz con 5 columnas
+
+# Para asignarles nombres a columnas y renglones usamos las funciones 
+colnames(matriz_1) <- c("C1", "C2")
+rownames(matriz_1) <- c("R1", "R2", 
+                        "R3", "R4",
+                        "R5")
+matriz_1 # Vemos los nuevos nombres de mis columnas y renglones
+```
+Para acceder a sus elemetos podemos hacerlo como en un vector. Sin embargo aquí podemos especificar sus dimensiones, siempre se comienza por renglones.
+```{r}
+matriz_1[1,1] # Así se accede al primer elemento
+matriz_1[1,2] # Así accedemos al primer elemento de la segunda columna
+matriz_1[1,] # Así accedemos a todos los elementos de un renglón
+matriz_1[ , "C1"] # De esta forma elegimos todos los valores especificando el nombre
+```
+
+
+### Operaciones con matrices
+Al igual que los vectores, si tenemos una matriz con números podemos multiplicarla, sumarla, dividirla, etc. 
+```{r}
+(matriz_result <- matriz_1 * 3) # Multiplicamos por 3 para obtener una nueva matriz
+#También podemos transponerla con la función t()
+(matriz_result_t <- t(matriz_result))
+```
+
+## **Data frames**
+### Propiedades principales  
+
+Los data frames son como las matrices, con renglones y columnas. No obstante, éstas sí pueden contener datos de diferentes tipos. Las columnas deben ser del mismo tipo pero pueden variar entre ellas. Su *Clase* corresponde a *data.frame*.  
+
+
+
+### Creación y acceso a dataframes  
+ Para crearlos usamos la función `data.frame()`
+```{r} 
+ mi_df <- data.frame(
+  "entero" = 1:4,
+  "numerico" = c(1.4, 3.4, 4.9, 3.3), 
+  "cadena" = c("a", "b", "c", "d"),
+  "factor" = factor(c("a", "b", "c", "d"))
+ )
+mi_df
+  
+```
+  
+### Manipulación básica
+Para acceder a sus elementos podemos usar `[]` o el símbolo `$` para seleccionar columnas.
+```{r}
+mi_df[1,1] # Así accedemos al primer elemento de la primer columna
+ # Así a la primer columna
+mi_df[1]
+#Accedemos a la primer columna por nombre usando "$"
+mi_df$entero
+# Acceso al primer renglón
+mi_df[1, ]
+#Así vemos sólo dos columnas. La 2 y 3
+mi_df[,c(2,3)]
+#Así vemos las columnas la 2 y 3 especificando su nombre
+mi_df[,c("numerico","cadena")] 
+# Así vemos un elemento específico en una columna
+## Vemos el segundo dato de la columna "factor"
+mi_df$factor[2]
+
+```
+De esta forma, podemos extraer info de un  data frame y guardarlo en nuevas variables (que tendrán clase *data.frame*).
+```{r}
+# Extraeremos las columnas que sólo tienen números y la guardaremos en una nueva variable
+(mi_df_numeros <- mi_df[c(1,2)])
+#Así obtenemos la info que queríamos de un df más grande
+```
+### **Listas**
+Las listas son unidimensionales pero pueden guardar objetos de muchos tipos, hasta pueden guardar más listas en ella.
+
+### Propiedades principales
+Son de clase *list* y tienen una longitud.
+
+### Creación y acceso a listas
+Para crearlas usamos la función `list()` y le agregamos objetos.
+
+``` {r}
+# Crearemos una lista con los objetos que vimos en esta unidad
+mi_lista <- list(v2,v3, #Son vectores
+                 matriz_1, matriz_result_t, # Matrices
+                 mi_df, mi_df_numeros) # Data frames
+#Veamos nuestra lista
+mi_lista
+```
+##### A su vez también podemos ponerle nombres a cada elemento de mi lista.
+``` {r}
+# Para ello usaremos "el nombre que queremos" (entre comillas) seguido de "=" y mi objeto a agregar
+mi_lista <- list("v2" = v2, "v3" = v3, #Son vectores
+                 "m1" = matriz_1, "m2" = matriz_result_t, # Matrices
+                 "df1" = mi_df, "df2" = mi_df_numeros) # Data frames
+# Ahora nuestra lista tiene los nombres que le asignamos
+mi_lista
+```
+##### Para **acceder** a ellas lo hacemos de forma similar a un data frame.
+``` {r}
+# Para acceder al primer objeto de la lista
+## En este caso es un vector con cadenas de texto
+mi_lista[1]
+# Para acceder a mi primer matriz con "$" y nombre
+mi_lista$m1
+# Para acceder a mi segundo data frame con "$" y nombre
+## Eligiendo la primer columna del data frame
+mi_lista$df2$entero
+# Para acceder a mi segundo data frame
+## Eligiendo el tercer elemento de la columna "numerico"
+mi_lista$df2$numerico[3]
+```
+##### Es así como hemos terminado esta Unidad3. Hemos avanzado mucho y hemos adquirido las bases para emepezar a ver datos y manipularlos. Nos vemos en la siguiente!!!
